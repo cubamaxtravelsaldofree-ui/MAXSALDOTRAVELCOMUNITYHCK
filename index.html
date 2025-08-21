@@ -159,6 +159,82 @@
       background-color: #2563eb;
     }
 
+    /* Caja de la Promo Internacional */
+    .promo-box {
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255, 75, 43, 0.7);
+      margin-bottom: 20px;
+      cursor: pointer;
+      animation: brillo 2s infinite alternate;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .promo-box:hover {
+      transform: scale(1.03);
+    }
+
+    .promo-box h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .promo-box p {
+      margin: 5px 0;
+      font-size: 15px;
+    }
+
+    .promo-precio {
+      background: white;
+      color: #ff4b2b;
+      display: inline-block;
+      padding: 6px 15px;
+      border-radius: 6px;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .btn-promo {
+      background: #ffffff;
+      color: #ff4b2b;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn-promo:hover {
+      background: #ffe3de;
+      transform: scale(1.05);
+    }
+
+    /* Estilos del contador */
+    #contador {
+      font-size: 16px;
+      font-weight: bold;
+      background: #fff;
+      color: #ff4b2b;
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.7);
+    }
+
+    /* Animación de brillo */
+    @keyframes brillo {
+      from { box-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
+      to { box-shadow: 0 0 30px rgba(255, 255, 255, 1); }
+    }
+
     /* Estilos del formulario integrado */
     form.contact-form {
       margin-top: 30px;
@@ -213,6 +289,17 @@
 
     <h1>Comprar Saldo</h1>
 
+    <!-- PROMO DESTACADA -->
+    <div class="promo-box" onclick="seleccionarPromo()">
+      <h2>🔥 PROMO INTERNACIONAL 🔥</h2>
+      <p>Del <strong>21 al 26 de agosto</strong></p>
+      <p><strong>🚀 QUINTUPLICA tu recarga + DATOS ILIMITADOS</strong> (12am - 7am)</p>
+      <p>📅 Válido por 30 días</p>
+      <div id="contador">Cargando...</div>
+      <div class="promo-precio">💰 5575 CUP</div>
+      <button class="btn-promo">¡APROVECHAR AHORA!</button>
+    </div>
+
     <div class="alert">
       ¡Atención! Una vez enviada la transferencia toque "Confirmar pago"
     </div>
@@ -224,7 +311,7 @@
       <option value="4700">3500 saldo - 4700 CUP</option>
       <option value="6700">5500 saldo - 6700 CUP</option>
       <option value="9500">8300 saldo - 9500 CUP</option>
-      <option value="5625">Promo Internacional (11-16 ago): 25GB + datos ilimitados (12am-7am) por 35 días - 5625 CUP</option>
+      <option value="5575">🚀 Promo Internacional (21-26 ago): QUINTUPLICA tu recarga + datos ilimitados (12am-7am) por 30 días - 5575 CUP</option>
     </select>
 
     <div class="price" id="precio">Total a pagar: 1950 CUP</div>
@@ -256,7 +343,6 @@
       <textarea name="mensaje" placeholder="Escribe tu mensaje" rows="4" required></textarea>
       <button type="submit">Enviar mensaje</button>
     </form>
-
   </div>
 
   <script>
@@ -267,11 +353,18 @@
     const transaccionInput = document.getElementById('transaccion');
     const loading = document.getElementById('loading');
     const finalMsg = document.getElementById('finalMsg');
+    const contador = document.getElementById('contador');
 
     recarga.addEventListener('change', () => {
       const valor = recarga.value;
       precio.innerText = `Total a pagar: ${valor} CUP`;
     });
+
+    function seleccionarPromo() {
+      recarga.value = "5575";
+      precio.innerText = "Total a pagar: 5575 CUP";
+      document.querySelector('.btn').scrollIntoView({ behavior: 'smooth' });
+    }
 
     btn.addEventListener('click', () => {
       const telefono = telefonoInput.value.trim();
@@ -302,6 +395,32 @@
         finalMsg.style.display = 'block';
       }, 5000);
     });
+
+    // Contador regresivo
+    function iniciarContador() {
+      const fechaFinal = new Date("Aug 26, 2025 23:59:59").getTime();
+
+      setInterval(() => {
+        const ahora = new Date().getTime();
+        const diferencia = fechaFinal - ahora;
+
+        if (diferencia <= 0) {
+          contador.innerHTML = "⛔ PROMO FINALIZADA";
+          contador.style.background = "gray";
+          contador.style.color = "white";
+          return;
+        }
+
+        const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+        const horas = Math.floor((diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        const segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+        contador.innerHTML = `⏳ Termina en: ${dias}d ${horas}h ${minutos}m ${segundos}s`;
+      }, 1000);
+    }
+
+    iniciarContador();
   </script>
 </body>
 </html>
